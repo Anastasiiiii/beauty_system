@@ -27,7 +27,7 @@ export class AppointmentsController {
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    return this.appointmentsService.findOne(+id);
+    return this.appointmentsService.findOne(id);
   }
 
   @Patch(':id')
@@ -35,11 +35,16 @@ export class AppointmentsController {
     @Param('id') id: string,
     @Body() updateAppointmentDto: UpdateAppointmentDto,
   ) {
-    return this.appointmentsService.update(+id, updateAppointmentDto);
+    return this.appointmentsService.update(id, updateAppointmentDto);
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    return this.appointmentsService.remove(+id);
+    return this.appointmentsService.remove(id);
+  }
+
+  @Get('user/:id')
+  async getAllForUser(@Param('id') id: string) {
+    return this.appointmentsService.getAllForUser(id);
   }
 }

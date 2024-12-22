@@ -12,6 +12,9 @@ export class Appointment {
   appointmentTime: Date;
 
   @Prop({ type: String, required: true })
+  clientId: string;
+
+  @Prop({ type: String, required: true })
   salonId: string;
 
   @Prop({ type: String, required: true })
