@@ -21,7 +21,10 @@ export class SalonsService {
   }
 
   async findOne(id: string): Promise<Salon> {
-    return this.salonModel.findOne({ _id: id }).exec();
+    return this.salonModel
+      .findOne({ _id: id })
+      .populate('masters')
+      .exec();
   }
 
   async update(id: string, updateSalonDto: UpdateSalonDto): Promise<Salon> {
@@ -36,5 +39,15 @@ export class SalonsService {
       .exec();
 
     return deletedSalon;
+  }
+
+  async assignMaster(id: string, masterId: string): Promise<Salon> {
+    return this.salonModel
+      .findByIdAndUpdate(
+        { _id: id },
+        { $push: { masters: masterId } },
+        { new: true },
+      )
+      .exec();
   }
 }

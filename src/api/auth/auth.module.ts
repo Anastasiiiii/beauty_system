@@ -6,9 +6,17 @@ import { JwtModule } from '@nestjs/jwt';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
+import { MongooseModule } from '@nestjs/mongoose';
+import { User, UserSchema } from '../users/schemas/user.schema';
 
 @Module({
-  imports: [PassportModule, JwtModule],
+  imports: [
+    PassportModule,
+    JwtModule,
+    MongooseModule.forFeature([
+      { name: User.name, schema: UserSchema },
+    ]),
+  ],
   controllers: [AuthController],
   providers: [
     AuthService,

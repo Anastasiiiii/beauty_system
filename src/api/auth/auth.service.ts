@@ -9,7 +9,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from '../users/schemas/user.schema';
 
-
 @Injectable()
 export class AuthService {
   constructor(
@@ -60,7 +59,7 @@ export class AuthService {
     await this.userModel.findByIdAndUpdate(
       { _id: user._id },
       { $set: { refreshToken: await hash(refreshToken, 10) } },
-    );
+    ).exec();
 
     response.cookie('Authentication', accessToken, {
       httpOnly: true,

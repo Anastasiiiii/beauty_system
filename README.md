@@ -6,6 +6,8 @@
 $ npm install
 ```
 
+ALSO! Make a copy of `.env.sample` and rename it to `.env`
+
 ## Compile and run the project
 
 ```bash

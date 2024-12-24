@@ -2,7 +2,7 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Appointment, AppointmentDocument } from './schemas/appointment.schema';
-import { User, UserDocument } from '../users/schemas/user.schema';
+import { User, UserDocument, UserType } from '../users/schemas/user.schema';
 import { Salon, SalonDocument } from '../salons/schemas/salon.schema';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
@@ -23,19 +23,28 @@ export class AppointmentsService {
     const { clientId, masterId, salonId } = createAppointmentDto;
 
     // Check if clientId corresponds to a User with userType 'client'
-    const client = await this.userModel.findOne({ _id: clientId, userType: 'client' });
+    const client = await this.userModel.findOne({
+      _id: clientId,
+      userType: UserType.CLIENT
+    });
+
     if (!client) {
       throw new BadRequestException('Invalid clientId');
     }
 
     // Check if masterId corresponds to a User with userType 'master'
-    const master = await this.userModel.findOne({ _id: masterId, userType: 'master' });
+    const master = await this.userModel.findOne({
+      _id: masterId,
+      userType: UserType.MASTER
+    });
+
     if (!master) {
       throw new BadRequestException('Invalid masterId');
     }
 
     // Check if salonId corresponds to an existing Salon
     const salon = await this.salonModel.findById(salonId);
+
     if (!salon) {
       throw new BadRequestException('Invalid salonId');
     }
@@ -43,7 +52,9 @@ export class AppointmentsService {
 
   async create(
     createAppointmentDto: CreateAppointmentDto,
+    user: UserDocument
   ): Promise<Appointment> {
+    createAppointmentDto.clientId = user._id.toString();
     await this.validateAppointmentData(createAppointmentDto);
 
     const createdAppointment =
@@ -76,7 +87,12 @@ export class AppointmentsService {
     return deletedAppointment;
   }
 
-  async getAllForUser(userId: string): Promise<Appointment[]> {
-    return this.appointmentModel.find({ clientId: userId }).exec();
+  async getAllForClient(user: UserDocument): Promise<Appointment[]> {
+    const userId = user._id;
+    return this.appointmentModel
+      .find({ clientId: userId })
+      .populate('masterId')
+      .populate('salonId')
+      .exec();
   }
 }

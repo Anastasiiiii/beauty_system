@@ -7,6 +7,7 @@ export enum UserType {
   CLIENT = 'client',
   MASTER = 'master',
   ADMINISTRATOR = 'administrator',
+  MANAGER = 'manager',
 }
 
 @Schema()
