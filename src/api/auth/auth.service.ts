@@ -17,7 +17,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async login(user: UserDocument, response: Response) {
+  async login(user: UserDocument, response: Response): Promise<UserDocument> {
     const expiresAccessToken = new Date();
     expiresAccessToken.setMilliseconds(
       expiresAccessToken.getTime() +
@@ -72,6 +72,8 @@ export class AuthService {
       secure: this.configService.get('NODE_ENV') === 'production',
       expires: expiresRefreshToken,
     });
+
+    return user;
   }
 
   async verifyUser(email: string, password: string) {

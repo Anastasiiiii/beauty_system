@@ -12,7 +12,7 @@ export class Salon {
   @Prop({ type: String, required: true })
   address: string;
 
-  @Prop({ type: [MongoSchema.Types.ObjectId], ref: User.name, required: true })
+  @Prop([{ type: MongoSchema.Types.ObjectId, ref: User.name, required: true }])
   masters: string[];
 }
 

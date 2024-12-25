@@ -17,14 +17,11 @@ export class SalonsService {
   }
 
   async findAll(): Promise<Salon[]> {
-    return this.salonModel.find().exec();
+    return this.salonModel.find().populate('masters').exec();
   }
 
   async findOne(id: string): Promise<Salon> {
-    return this.salonModel
-      .findOne({ _id: id })
-      .populate('masters')
-      .exec();
+    return this.salonModel.findOne({ _id: id }).populate('masters').exec();
   }
 
   async update(id: string, updateSalonDto: UpdateSalonDto): Promise<Salon> {

@@ -15,8 +15,8 @@ export class AuthController {
   async login(
     @CurrentUser() user: UserDocument,
     @Res({ passthrough: true }) response: Response,
-  ) {
-    await this.authService.login(user, response);
+  ): Promise<UserDocument> {
+    return this.authService.login(user, response);
   }
 
   @Post('refresh')
@@ -24,7 +24,7 @@ export class AuthController {
   async refreshToken(
     @CurrentUser() user: UserDocument,
     @Res({ passthrough: true }) response: Response,
-  ) {
-    await this.authService.login(user, response);
+  ): Promise<UserDocument> {
+    return this.authService.login(user, response);
   }
 }
