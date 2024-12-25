@@ -19,13 +19,15 @@ export class AppointmentsService {
   ) {}
 
   // Validates if the input data is correct
-  private async validateAppointmentData(createAppointmentDto: CreateAppointmentDto): Promise<void> {
+  private async validateAppointmentData(
+    createAppointmentDto: CreateAppointmentDto,
+  ): Promise<void> {
     const { clientId, masterId, salonId } = createAppointmentDto;
 
     // Check if clientId corresponds to a User with userType 'client'
     const client = await this.userModel.findOne({
       _id: clientId,
-      userType: UserType.CLIENT
+      userType: UserType.CLIENT,
     });
 
     if (!client) {
@@ -35,7 +37,7 @@ export class AppointmentsService {
     // Check if masterId corresponds to a User with userType 'master'
     const master = await this.userModel.findOne({
       _id: masterId,
-      userType: UserType.MASTER
+      userType: UserType.MASTER,
     });
 
     if (!master) {
@@ -52,7 +54,7 @@ export class AppointmentsService {
 
   async create(
     createAppointmentDto: CreateAppointmentDto,
-    user: UserDocument
+    user: UserDocument,
   ): Promise<Appointment> {
     createAppointmentDto.clientId = user._id.toString();
     await this.validateAppointmentData(createAppointmentDto);
@@ -63,7 +65,12 @@ export class AppointmentsService {
   }
 
   async findAll(): Promise<Appointment[]> {
-    return this.appointmentModel.find().exec();
+    return this.appointmentModel
+      .find()
+      .populate('clientId')
+      .populate('masterId')
+      .populate('salonId')
+      .exec();
   }
 
   async findOne(id: string): Promise<Appointment> {
@@ -92,6 +99,15 @@ export class AppointmentsService {
     return this.appointmentModel
       .find({ clientId: userId })
       .populate('masterId')
+      .populate('salonId')
+      .exec();
+  }
+
+  async getAllForMaster(user: UserDocument): Promise<Appointment[]> {
+    const userId = user._id;
+    return this.appointmentModel
+      .find({ masterId: userId })
+      .populate('clientId')
       .populate('salonId')
       .exec();
   }

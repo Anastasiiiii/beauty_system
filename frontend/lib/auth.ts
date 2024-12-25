@@ -1,7 +1,7 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
-const { BACKEND_API_URL } = process.env;
+const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -13,16 +13,21 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        console.log({ credentials });
-
         try {
           const requestBody = JSON.stringify({
             email: credentials.email,
             password: credentials.password,
           });
 
+          const headers = {
+            'Content-Type': 'application/json',
+            Accept: 'application/json'
+          };
+
           // Send login request to the local server
           const response = await fetch(`${BACKEND_API_URL}/api/auth/login`, {
+            method: 'POST',
+            headers,
             body: requestBody,
             credentials: 'same-origin'
           });
@@ -30,12 +35,21 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           // Check if login was successful
           if (response.ok) {
             const responseData = await response.json();
-            response.headers.getSetCookie
+            const cookies = response.headers.getSetCookie();
+
+            const token = cookies
+              .find((cookie) => cookie.startsWith('Authentication'))
+              ?.match(/Authentication=([^;]+);/)?.[1];
+
+            const { name, email, userType } = responseData;
+
             // Return user data to store in the session
             return {
               id: responseData._id,
-              name: responseData.name,
-              email: responseData.email
+              name,
+              email,
+              userType,
+              token
             };
           }
           return null;
@@ -59,8 +73,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     async session({ session, token }) {
       // Pass additional user info to the session object
-      if (token && token.email === 'string') {
-        session.user.email =  token.email;
+      if (token.user) {
+        session.user = token.user;
       }
 
       return session;
@@ -79,4 +93,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
   // Turn on debug mode for easier development
   debug: true,
+
+  // Trust the host
+  trustHost: true
 });

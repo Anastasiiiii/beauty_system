@@ -17,7 +17,27 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
-        (request: Request) => request.cookies?.Authentication,
+        (request: Request) => {
+          // By default, retrieve the token from cookies
+          let token: string = request.cookies?.Authentication;
+
+          // If it's not present there, seek for it in headers
+          if (!token) {
+            token = request.headers?.authorization;
+
+            // If this token is present, trim off the Bearer thing
+            if (token) {
+              token = token.replace('Bearer', '').trim();
+            }
+          }
+
+          // Last chance: "token" request field
+          if (!token) {
+            token = request.body?.token;
+          }
+
+          return token;
+        },
       ]),
       secretOrKey: configService.getOrThrow('JWT_ACCESS_TOKEN_SECRET'),
     });

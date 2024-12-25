@@ -1,3 +1,5 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -7,21 +9,27 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { signIn } from '@/lib/auth';
+
+import { signIn } from "next-auth/react";
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
-  const handleLogin = async (event: any) => {
-    'use server';
+  const router = useRouter();
 
+  const handleLogin = async (event: any) => {
     event.preventDefault();
     const email = event.target.email.value;
     const password = event.target.password.value;
 
-    await signIn('credentials', {
+    const result = await signIn('credentials', {
       email,
       password,
-      redirect: true
+      redirect: false
     });
+
+    if (result?.ok) {
+      router.push('/');
+    }
   };
 
   return (
@@ -35,7 +43,7 @@ export default function LoginPage() {
         </CardHeader>
         <CardFooter>
           <form
-            action={handleLogin}
+            onSubmit={handleLogin}
             className='w-full'
           >
             <Input type="email" name="email" placeholder="Email" required />

@@ -22,5 +22,3 @@ export async function getProducts(): Promise<{
     totalProducts: 1
   };
 }
-
-export async function deleteProductById() {}

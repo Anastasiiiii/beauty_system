@@ -17,7 +17,17 @@ export class JwtRefreshStrategy extends PassportStrategy(
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
-        (request: Request) => request.cookies?.Refresh,
+        (request: Request) => {
+          // By default, retrieve the token from cookies
+          let token: string = request.cookies?.Refresh;
+
+          // Last chance: "refresh" request field
+          if (!token) {
+            token = request.body?.refresh;
+          }
+
+          return token;
+        },
       ]),
       secretOrKey: configService.getOrThrow('JWT_REFRESH_TOKEN_SECRET'),
       passReqToCallback: true,

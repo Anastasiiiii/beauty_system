@@ -56,10 +56,12 @@ export class AuthService {
       )}ms`,
     });
 
-    await this.userModel.findByIdAndUpdate(
-      { _id: user._id },
-      { $set: { refreshToken: await hash(refreshToken, 10) } },
-    ).exec();
+    await this.userModel
+      .findByIdAndUpdate(
+        { _id: user._id },
+        { $set: { refreshToken: await hash(refreshToken, 10) } },
+      )
+      .exec();
 
     response.cookie('Authentication', accessToken, {
       httpOnly: true,
@@ -78,9 +80,11 @@ export class AuthService {
 
   async verifyUser(email: string, password: string) {
     try {
-      const user = await this.userModel.findOne({
-        email,
-      }).exec();
+      const user = await this.userModel
+        .findOne({
+          email,
+        })
+        .exec();
 
       const authenticated = await compare(password, user.password);
 

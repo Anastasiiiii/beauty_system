@@ -29,6 +29,7 @@ export class AppointmentsController {
     return this.appointmentsService.create(createAppointmentDto, user);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async findAll() {
     return this.appointmentsService.findAll();
@@ -40,6 +41,13 @@ export class AppointmentsController {
     return this.appointmentsService.getAllForClient(user);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get('master')
+  async getAllForMaster(@CurrentUser() user: UserDocument) {
+    return this.appointmentsService.getAllForMaster(user);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return this.appointmentsService.findOne(id);
