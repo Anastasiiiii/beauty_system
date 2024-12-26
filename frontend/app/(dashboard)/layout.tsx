@@ -22,19 +22,23 @@ import { Analytics } from '@vercel/analytics/react';
 import { User } from './user';
 import Providers from './providers';
 import { NavItem } from './nav-item';
+import { auth } from '@/lib/auth';
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children
 }: {
   children: React.ReactNode;
 }) {
+  const session = await auth();
+  const userType = session?.user?.userType ?? 'guest';
+
   return (
     <Providers>
       <main className="flex min-h-screen w-full flex-col bg-muted/40">
-        <DesktopNav />
+        <DesktopNav userType={userType} />
         <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
           <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-            <MobileNav />
+            <MobileNav userType={userType} />
             <User />
           </header>
           <main className="grid flex-1 items-start gap-2 p-4 sm:px-6 sm:py-0 md:gap-4 bg-muted/40">
@@ -47,7 +51,7 @@ export default function DashboardLayout({
   );
 }
 
-function DesktopNav() {
+function DesktopNav({ userType }: { userType: string }) {
   return (
     <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
       <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
@@ -59,21 +63,25 @@ function DesktopNav() {
           <ScissorsLineDashed className="h-5 w-5" />
         </NavItem>
 
-        <NavItem href="/appointments" label="Записи">
-          <NotebookText className="h-5 w-5" />
-        </NavItem>
+        {userType !== 'guest' &&
+          <NavItem href="/appointments" label="Записи">
+            <NotebookText className="h-5 w-5" />
+          </NavItem>
+        }
 
-        <NavItem href="/inventory" label="Інвентар">
-          <Package className="h-5 w-5" />
-        </NavItem>
+        {['administrator', 'manager'].includes(userType) && (<>
+          <NavItem href="/inventory" label="Інвентар">
+            <Package className="h-5 w-5" />
+          </NavItem>
 
-        <NavItem href="/customers" label="Користувачі">
-          <Users2 className="h-5 w-5" />
-        </NavItem>
+          <NavItem href="/customers" label="Користувачі">
+            <Users2 className="h-5 w-5" />
+          </NavItem>
 
-        <NavItem href="#" label="Аналітика">
-          <LineChart className="h-5 w-5" />
-        </NavItem>
+          <NavItem href="#" label="Аналітика">
+            <LineChart className="h-5 w-5" />
+          </NavItem>
+        </>)}
       </nav>
       <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
         <Tooltip>
@@ -93,7 +101,7 @@ function DesktopNav() {
   );
 }
 
-function MobileNav() {
+function MobileNav({ userType }: { userType: string }) {
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -125,34 +133,40 @@ function MobileNav() {
             <ScissorsLineDashed className="h-5 w-5" />
             Салони
           </Link>
-          <Link
-            href="/appointments"
-            className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-          >
-            <NotebookText className="h-5 w-5" />
-            Записи
-          </Link>
-          <Link
-            href="/inventory"
-            className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-          >
-            <Package className="h-5 w-5" />
-            Інвентар
-          </Link>
-          <Link
-            href="/customers"
-            className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-          >
-            <Users2 className="h-5 w-5" />
-            Користувачі
-          </Link>
-          <Link
-            href="#"
-            className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-          >
-            <LineChart className="h-5 w-5" />
-            Аналітика
-          </Link>
+
+          {userType !== 'guest' &&
+            <Link
+              href="/appointments"
+              className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+            >
+              <NotebookText className="h-5 w-5" />
+              Записи
+            </Link>
+          }
+
+          {['administrator', 'manager'].includes(userType) && (<>
+            <Link
+              href="/inventory"
+              className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+            >
+              <Package className="h-5 w-5" />
+              Інвентар
+            </Link>
+            <Link
+              href="/customers"
+              className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+            >
+              <Users2 className="h-5 w-5" />
+              Користувачі
+            </Link>
+            <Link
+              href="#"
+              className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+            >
+              <LineChart className="h-5 w-5" />
+              Аналітика
+            </Link>
+          </>)}
         </nav>
       </SheetContent>
     </Sheet>

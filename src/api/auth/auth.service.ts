@@ -80,11 +80,7 @@ export class AuthService {
 
   async verifyUser(email: string, password: string) {
     try {
-      const user = await this.userModel
-        .findOne({
-          email,
-        })
-        .exec();
+      const user = await this.userModel.findOne({ email }).exec();
 
       const authenticated = await compare(password, user.password);
 

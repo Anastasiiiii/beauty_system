@@ -13,3 +13,26 @@ export async function getSalons(): Promise<any[]> {
   }
 }
 
+// Appointment-related
+export async function getAppointments(token: string, userType: string): Promise<any[]> {
+  const appendedUserTypes = ['client', 'master'];
+  const urlSuffix = appendedUserTypes.includes(userType) ? userType : '';
+  const requestUrl = `${BACKEND_API_URL}/api/appointments/${urlSuffix}`;
+
+  const headers = {
+    Authorization: `Bearer ${token}`
+  };
+
+  try {
+    const response = await fetch(requestUrl, {
+      headers
+    });
+
+    const appointments = await response.json();
+    return appointments;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}
+
