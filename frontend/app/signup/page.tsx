@@ -1,5 +1,5 @@
 'use client';
-const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -9,8 +9,9 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-
 import { useRouter } from 'next/navigation';
+import { signIn } from "next-auth/react";
+import { signupUser } from '@/lib/register';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -22,30 +23,19 @@ export default function SignupPage() {
     const password = event.target.password.value;
 
     try {
-      const response = await fetch(`${BACKEND_API_URL}/api/users`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: name,
-          email: email,
-          password: password,
-          userType: 'client',
-          reviews: []
-        }),
-        credentials: 'same-origin',
+      await signupUser({ name, email, password });
+
+      const result = await signIn('credentials', {
+        email,
+        password,
+        redirect: false
       });
-  
-      if (response.ok) { 
+
+      if (result?.ok) {
         router.push('/');
-      } else {
-        const errorData = await response.json();
-        console.error('Помилка реєстрації:', errorData);
-        alert('Не вдалося зареєструватися. Спробуйте ще раз.');
-      }
-    } catch (error) {
-      console.error('Помилка під час запиту:', error);
+      } 
+    } catch (error: any) {
+      alert(error.message || 'Сталася помилка. Спробуйте ще раз.');
     }
   };
 
@@ -55,14 +45,11 @@ export default function SignupPage() {
         <CardHeader>
           <CardTitle className='text-2xl'>Реєстрація користувача</CardTitle>
           <CardDescription>
-            Введіть ім'я, прізвище, елекронну пошту та пароль.
+            Введіть ім'я, прізвище, електронну пошту та пароль.
           </CardDescription>
         </CardHeader>
         <CardFooter>
-          <form
-            onSubmit={handleSignup}
-            className='w-full'
-          >
+          <form onSubmit={handleSignup} className='w-full'>
             <Input type="name" name="name" placeholder="Ім'я та Прізвище" required />
             <Input type="email" name="email" placeholder="Електронна пошта" required />
             <Input type="password" name="password" placeholder="Пароль" required />
