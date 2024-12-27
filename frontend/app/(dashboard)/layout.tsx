@@ -8,6 +8,8 @@ import {
   PanelLeft,
   ScissorsLineDashed,
   Settings,
+  Mail,
+  MessageSquareMore,
   Users2
 } from 'lucide-react';
 
@@ -63,6 +65,13 @@ function DesktopNav({ userType }: { userType: string }) {
           <ScissorsLineDashed className="h-5 w-5" />
         </NavItem>
 
+        {['client', 'master'].includes(userType) && (<>
+          <NavItem href="/complaints" label="Скарги">
+            <MessageSquareMore className="h-5 w-5" />
+          </NavItem>
+        </>)
+        }
+
         {userType !== 'guest' &&
           <NavItem href="/appointments" label="Записи">
             <NotebookText className="h-5 w-5" />
@@ -81,21 +90,11 @@ function DesktopNav({ userType }: { userType: string }) {
           <NavItem href="#" label="Аналітика">
             <LineChart className="h-5 w-5" />
           </NavItem>
+
+          <NavItem href="/reports" label="Відгуки">
+            <Mail className="h-5 w-5" />
+          </NavItem>
         </>)}
-      </nav>
-      <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Link
-              href="#"
-              className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-            >
-              <Settings className="h-5 w-5" />
-              <span className="sr-only">Settings</span>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent side="right">Settings</TooltipContent>
-        </Tooltip>
       </nav>
     </aside>
   );
@@ -134,6 +133,17 @@ function MobileNav({ userType }: { userType: string }) {
             Салони
           </Link>
 
+          {!['administrator', 'manager'].includes(userType) && (<>
+            <Link
+              href="/complaints"
+              className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+            >
+              <MessageSquareMore className="h-5 w-5" />
+              Скарги
+            </Link>
+          </>)
+          }
+
           {userType !== 'guest' &&
             <Link
               href="/appointments"
@@ -169,6 +179,6 @@ function MobileNav({ userType }: { userType: string }) {
           </>)}
         </nav>
       </SheetContent>
-    </Sheet>
+    </Sheet >
   );
 }
