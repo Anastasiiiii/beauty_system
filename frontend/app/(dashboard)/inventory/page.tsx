@@ -26,12 +26,7 @@ export default async function InventoryPage() {
           <TabsTrigger value="draft">Наявні</TabsTrigger>
         </TabsList>
         <div className="ml-auto flex items-center gap-2">
-          <Button size="sm" className="h-8 gap-1">
-            <PlusCircle className="h-3.5 w-3.5" />
-            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-              Додати
-            </span>
-          </Button>
+          <AddProductForm salons={salonNames} token={token}/>
         </div>
       </div>
 
@@ -47,11 +42,11 @@ export default async function InventoryPage() {
         <ProductsTable products={availableProducts} offset={0} totalProducts={availableProducts.length} />
       </TabsContent>
 
-      {token && (
+      {/* {token && (
         <div>
             <AddProductForm salons={salonNames} token={token}/>
         </div>
-      )}
+      )} */}
     </Tabs>
   );
 }
