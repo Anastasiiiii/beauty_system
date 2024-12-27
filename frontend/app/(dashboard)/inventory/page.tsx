@@ -2,17 +2,18 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { File, PlusCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ProductsTable } from './products-table';
-import { getProducts } from '@/lib/requestLib';
+import { getProducts, getSalons } from '@/lib/requestLib';
 import { auth } from '@/lib/auth';
+import { AddProductForm } from './add-form';
 
 export default async function InventoryPage() {
   const session = await auth();
   const token = session?.user?.token;
-
   const products = await getProducts(token);
+  const salons =  await getSalons();
+  const salonNames = salons.map(salon => salon.name);
+  console.log(salonNames)
   const count = products.length;
-
-  // Фільтрування даних для вкладок
   const productsToOrder = products.filter(product => product.needsRestocking);
   const availableProducts = products.filter(product => product.quantity > 0);
 
@@ -39,30 +40,24 @@ export default async function InventoryPage() {
           </Button>
         </div>
       </div>
-      {/* Вкладка "Все" */}
+
       <TabsContent value="all">
-        <ProductsTable
-          products={products}
-          offset={0}
-          totalProducts={count}
-        />
+        <ProductsTable products={products} offset={0} totalProducts={count} />
       </TabsContent>
-      {/* Вкладка "Потрібно замовити" */}
+
       <TabsContent value="active">
-        <ProductsTable
-          products={productsToOrder}
-          offset={0}
-          totalProducts={productsToOrder.length}
-        />
+        <ProductsTable products={productsToOrder} offset={0} totalProducts={productsToOrder.length} />
       </TabsContent>
-      {/* Вкладка "Наявні" */}
+
       <TabsContent value="draft">
-        <ProductsTable
-          products={availableProducts}
-          offset={0}
-          totalProducts={availableProducts.length}
-        />
+        <ProductsTable products={availableProducts} offset={0} totalProducts={availableProducts.length} />
       </TabsContent>
+
+      {token && (
+        <div>
+            <AddProductForm salons={salonNames} token={token}/>
+        </div>
+      )}
     </Tabs>
   );
 }

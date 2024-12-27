@@ -60,3 +60,28 @@ export async function getProducts(token: string): Promise<any[]> {
     return [];
   }
 }
+
+//add products
+export async function addProduct(token: string, productData: any): Promise<boolean> {
+  try {
+    const response = await fetch(`${BACKEND_API_URL}/api/products`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(productData),
+    });
+
+    if (!response.ok) {
+      console.error('Failed to add product:', response.status, response.statusText);
+      return false;
+    }
+
+    console.log('Product added successfully');
+    return true;
+  } catch (error) {
+    console.error('Error adding product:', error);
+    return false;
+  }
+}

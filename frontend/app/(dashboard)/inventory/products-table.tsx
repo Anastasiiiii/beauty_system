@@ -74,9 +74,6 @@ export function ProductsTable({
                 <TableHead className="hidden md:table-cell">
                   {product.needsRestocking ? "Так" : "Ні"}
                 </TableHead>
-                <TableHead>
-                  <button className="text-blue-500 hover:underline">Редагувати</button>
-                </TableHead>
               </TableRow>
             ))}
           </TableBody>
