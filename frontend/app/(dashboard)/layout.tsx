@@ -8,6 +8,8 @@ import {
   PanelLeft,
   ScissorsLineDashed,
   Settings,
+  Mail,
+  MessageSquareMore,
   Users2
 } from 'lucide-react';
 
@@ -63,6 +65,13 @@ function DesktopNav({ userType }: { userType: string }) {
           <ScissorsLineDashed className="h-5 w-5" />
         </NavItem>
 
+        {!['administrator', 'manager'].includes(userType) && (<>
+          <NavItem href="/complaints" label="Скарги">
+            <MessageSquareMore className="h-5 w-5" />
+          </NavItem>
+        </>)
+        }
+
         {userType !== 'guest' &&
           <NavItem href="/appointments" label="Записи">
             <NotebookText className="h-5 w-5" />
@@ -80,6 +89,10 @@ function DesktopNav({ userType }: { userType: string }) {
 
           <NavItem href="#" label="Аналітика">
             <LineChart className="h-5 w-5" />
+          </NavItem>
+
+          <NavItem href="/reports" label="Відгуки">
+            <Mail className="h-5 w-5" />
           </NavItem>
         </>)}
       </nav>
@@ -134,6 +147,17 @@ function MobileNav({ userType }: { userType: string }) {
             Салони
           </Link>
 
+          {!['administrator', 'manager'].includes(userType) && (<>
+            <Link
+              href="/complaints"
+              className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+            >
+              <MessageSquareMore className="h-5 w-5" />
+              Скарги
+            </Link>
+          </>)
+          }
+
           {userType !== 'guest' &&
             <Link
               href="/appointments"
@@ -169,6 +193,6 @@ function MobileNav({ userType }: { userType: string }) {
           </>)}
         </nav>
       </SheetContent>
-    </Sheet>
+    </Sheet >
   );
 }
