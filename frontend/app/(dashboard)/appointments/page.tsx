@@ -31,9 +31,11 @@ export default async function AppointmentsPage() {
           <CardDescription>Заплановані записи на послугу/процедуру</CardDescription>
         </CardHeader>
 
-        <div className="ml-auto flex items-center gap-2">
-          <CreateAppointmentForm salons={salons} token={token} clientId={user?.id} />
-        </div>
+        {user?.userType === 'client' &&
+          <div className="ml-auto flex items-center gap-2">
+            <CreateAppointmentForm salons={salons} token={token} clientId={user?.id} />
+          </div>
+        }
       </div>
       <CardContent>
         <AppointmentList appointments={appointments} />
