@@ -15,15 +15,6 @@ import { deleteProduct } from './actions';
 export function Product({ product }: { product: any }) {
   return (
     <TableRow>
-      <TableCell className="hidden sm:table-cell">
-        <Image
-          alt="Product image"
-          className="aspect-square rounded-md object-cover"
-          height="64"
-          src={product.imageUrl}
-          width="64"
-        />
-      </TableCell>
       <TableCell className="font-medium">{product.name}</TableCell>
       <TableCell>
         <Badge variant="outline" className="capitalize">
@@ -44,11 +35,10 @@ export function Product({ product }: { product: any }) {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem>Edit</DropdownMenuItem>
+            <DropdownMenuItem>Редагувати</DropdownMenuItem>
             <DropdownMenuItem>
               <form action={deleteProduct}>
-                <button type="submit">Delete</button>
+                <button type="submit">Видалити</button>
               </form>
             </DropdownMenuItem>
           </DropdownMenuContent>

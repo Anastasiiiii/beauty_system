@@ -11,24 +11,21 @@ export default async function InventoryPage() {
     <Tabs defaultValue="all">
       <div className="flex items-center">
         <TabsList>
-          <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="active">Active</TabsTrigger>
-          <TabsTrigger value="draft">Draft</TabsTrigger>
-          <TabsTrigger value="archived" className="hidden sm:flex">
-            Archived
-          </TabsTrigger>
+          <TabsTrigger value="all">Все</TabsTrigger>
+          <TabsTrigger value="active">Потрібно замовити</TabsTrigger>
+          <TabsTrigger value="draft">Наявні</TabsTrigger>
         </TabsList>
         <div className="ml-auto flex items-center gap-2">
           <Button size="sm" variant="outline" className="h-8 gap-1">
             <File className="h-3.5 w-3.5" />
             <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-              Export
+              Завантажити
             </span>
           </Button>
           <Button size="sm" className="h-8 gap-1">
             <PlusCircle className="h-3.5 w-3.5" />
             <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-              Add Product
+              Додати
             </span>
           </Button>
         </div>
