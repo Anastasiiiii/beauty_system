@@ -43,25 +43,22 @@ export function ProductsTable({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Products</CardTitle>
+        <CardTitle>Інвентар</CardTitle>
         <CardDescription>
-          Manage your products and view their sales performance.
+          Інвентаризація наявних засобів у салонах.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="hidden w-[100px] sm:table-cell">
-                <span className="sr-only">Image</span>
-              </TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="hidden md:table-cell">Price</TableHead>
+              <TableHead>Назва</TableHead>
+              <TableHead className="hidden md:table-cell">Артикул</TableHead>
               <TableHead className="hidden md:table-cell">
-                Total Sales
+                Кількість
               </TableHead>
-              <TableHead className="hidden md:table-cell">Created at</TableHead>
+              <TableHead className="hidden md:table-cell">Салон</TableHead>
+              <TableHead className="hidden md:table-cell">Потреба у замовленні</TableHead>
               <TableHead>
                 <span className="sr-only">Actions</span>
               </TableHead>
@@ -69,47 +66,20 @@ export function ProductsTable({
           </TableHeader>
           <TableBody>
             {products.map((product) => (
-              <Product key={product.id} product={product} />
+              <TableRow key={product.id}>
+                <TableHead>{product.name}</TableHead>
+                <TableHead className="hidden md:table-cell">{product.sku}</TableHead>
+                <TableHead className="hidden md:table-cell">{product.quantity}</TableHead>
+                <TableHead className="hidden md:table-cell">{product.salon}</TableHead>
+                <TableHead className="hidden md:table-cell">
+                  {product.needsRestocking ? "Так" : "Ні"}
+                </TableHead>
+              </TableRow>
             ))}
           </TableBody>
         </Table>
       </CardContent>
       <CardFooter>
-        <form className="flex items-center w-full justify-between">
-          <div className="text-xs text-muted-foreground">
-            Showing{' '}
-            <strong>
-              {Math.max(
-                0,
-                Math.min(offset - productsPerPage, totalProducts) + 1
-              )}
-              -{offset}
-            </strong>{' '}
-            of <strong>{totalProducts}</strong> products
-          </div>
-          <div className="flex">
-            <Button
-              formAction={prevPage}
-              variant="ghost"
-              size="sm"
-              type="submit"
-              disabled={offset === productsPerPage}
-            >
-              <ChevronLeft className="mr-2 h-4 w-4" />
-              Prev
-            </Button>
-            <Button
-              formAction={nextPage}
-              variant="ghost"
-              size="sm"
-              type="submit"
-              disabled={offset + productsPerPage > totalProducts}
-            >
-              Next
-              <ChevronRight className="ml-2 h-4 w-4" />
-            </Button>
-          </div>
-        </form>
       </CardFooter>
     </Card>
   );
