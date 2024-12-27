@@ -45,23 +45,20 @@ export function ProductsTable({
       <CardHeader>
         <CardTitle>Products</CardTitle>
         <CardDescription>
-          Manage your products and view their sales performance.
+          Інвентаризація наявних засобів у салонах.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="hidden w-[100px] sm:table-cell">
-                <span className="sr-only">Image</span>
-              </TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="hidden md:table-cell">Price</TableHead>
+              <TableHead>Назва</TableHead>
+              <TableHead className="hidden md:table-cell">Артикул</TableHead>
               <TableHead className="hidden md:table-cell">
-                Total Sales
+                Кількість
               </TableHead>
-              <TableHead className="hidden md:table-cell">Created at</TableHead>
+              <TableHead className="hidden md:table-cell">Салон</TableHead>
+              <TableHead className="hidden md:table-cell">Потреба у замовленні</TableHead>
               <TableHead>
                 <span className="sr-only">Actions</span>
               </TableHead>
@@ -69,7 +66,18 @@ export function ProductsTable({
           </TableHeader>
           <TableBody>
             {products.map((product) => (
-              <Product key={product.id} product={product} />
+              <TableRow key={product.id}>
+                <TableHead>{product.name}</TableHead>
+                <TableHead className="hidden md:table-cell">{product.sku}</TableHead>
+                <TableHead className="hidden md:table-cell">{product.quantity}</TableHead>
+                <TableHead className="hidden md:table-cell">{product.salon}</TableHead>
+                <TableHead className="hidden md:table-cell">
+                  {product.needsRestocking ? "Так" : "Ні"}
+                </TableHead>
+                <TableHead>
+                  <button className="text-blue-500 hover:underline">Редагувати</button>
+                </TableHead>
+              </TableRow>
             ))}
           </TableBody>
         </Table>
