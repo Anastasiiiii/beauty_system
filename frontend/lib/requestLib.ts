@@ -36,6 +36,29 @@ export async function getAppointments(token: string, userType: string): Promise<
   }
 }
 
+export async function createAppointment(requestBody: any): Promise<any> {
+  const requestUrl = `${BACKEND_API_URL}/api/appointments`;
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Content-Type': 'application/json',
+  };
+
+  try {
+    const response = await fetch(requestUrl, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(requestBody),
+    });
+
+    const responseData = await response.json();
+    return responseData;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+// Report-related
 export async function createReport(token: string, report: string): Promise<any> {
   const requestUrl = `${BACKEND_API_URL}/api/reports`;
   const headers = {

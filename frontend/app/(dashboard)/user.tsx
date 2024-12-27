@@ -47,9 +47,14 @@ export async function User() {
             </form>
           </DropdownMenuItem>
         ) : (
-          <DropdownMenuItem>
-            <Link href="/login">Sign In</Link>
-          </DropdownMenuItem>
+          <>
+            <DropdownMenuItem>
+              <Link href="/login">Sign In</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link href="/signup">Sign Up</Link>
+            </DropdownMenuItem>
+          </>
         )}
       </DropdownMenuContent>
     </DropdownMenu>
